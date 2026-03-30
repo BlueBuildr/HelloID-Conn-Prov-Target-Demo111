@@ -1,5 +1,5 @@
 ##################################################
-# HelloID-Conn-Prov-Target-{connectorName}-Disable
+# HelloID-Conn-Prov-Target-Demo111-Disable
 # PowerShell V2
 ##################################################
 
@@ -7,7 +7,7 @@
 [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor [System.Net.SecurityProtocolType]::Tls12
 
 #region functions
-function Resolve-{connectorName}Error {
+function Resolve-Demo111Error {
     [CmdletBinding()]
     param (
         [Parameter(Mandatory)]
@@ -53,7 +53,7 @@ try {
         throw 'The account reference could not be found'
     }
 
-    Write-Information 'Verifying if a {connectorName} account exists'
+    Write-Information 'Verifying if a Demo111 account exists'
     $correlatedAccount = 'userInfo'
     # $correlatedAccount = (Invoke-RestMethod @splatGetUserParams)
 
@@ -68,7 +68,7 @@ try {
     switch ($lifecycleProcess) {
         'DisableAccount' {
             if (-not($actionContext.DryRun -eq $true)) {
-                Write-Information "Disabling {connectorName} account with accountReference: [$($actionContext.References.Account)]"
+                Write-Information "Disabling Demo111 account with accountReference: [$($actionContext.References.Account)]"
 
                 if ($actionContext.Origin -eq 'reconciliation') {
                     # During reconciliation, hardcoded values may need to be set as personContext and actionContext.Data are not available
@@ -79,7 +79,7 @@ try {
                 }
             }
             else {
-                Write-Information "[DryRun] Disable {connectorName} account with accountReference: [$($actionContext.References.Account)], will be executed during enforcement"
+                Write-Information "[DryRun] Disable Demo111 account with accountReference: [$($actionContext.References.Account)], will be executed during enforcement"
             }
 
             # Make sure to filter out arrays from $outputContext.Data (If this is not mapped to type Array in the fieldMapping). This is not supported by HelloID.
@@ -92,10 +92,10 @@ try {
         }
 
         'NotFound' {
-            Write-Information "{connectorName} account: [$($actionContext.References.Account)] could not be found, indicating that it may have been deleted"
+            Write-Information "Demo111 account: [$($actionContext.References.Account)] could not be found, indicating that it may have been deleted"
             $outputContext.Success = $true
             $outputContext.AuditLogs.Add([PSCustomObject]@{
-                    Message = "{connectorName} account: [$($actionContext.References.Account)] could not be found, indicating that it may have been deleted. Action initiated by: [$($actionContext.Origin)]"
+                    Message = "Demo111 account: [$($actionContext.References.Account)] could not be found, indicating that it may have been deleted. Action initiated by: [$($actionContext.Origin)]"
                     IsError = $false
                 })
             break
@@ -107,12 +107,12 @@ catch {
     $ex = $PSItem
     if ($($ex.Exception.GetType().FullName -eq 'Microsoft.PowerShell.Commands.HttpResponseException') -or
         $($ex.Exception.GetType().FullName -eq 'System.Net.WebException')) {
-        $errorObj = Resolve-{connectorName}Error -ErrorObject $ex
-        $auditLogMessage = "Could not disable {connectorName} account: [$($actionContext.References.Account)]. Error: $($errorObj.FriendlyMessage). Action initiated by: [$($actionContext.Origin)]"
+        $errorObj = Resolve-Demo111Error -ErrorObject $ex
+        $auditLogMessage = "Could not disable Demo111 account: [$($actionContext.References.Account)]. Error: $($errorObj.FriendlyMessage). Action initiated by: [$($actionContext.Origin)]"
         Write-Warning "Error at Line '$($errorObj.ScriptLineNumber)': $($errorObj.Line). Error: $($errorObj.ErrorDetails)"
     }
     else {
-        $auditLogMessage = "Could not disable {connectorName} account: [$($actionContext.References.Account)]. Error: $($_.Exception.Message). Action initiated by: [$($actionContext.Origin)]"
+        $auditLogMessage = "Could not disable Demo111 account: [$($actionContext.References.Account)]. Error: $($_.Exception.Message). Action initiated by: [$($actionContext.Origin)]"
         Write-Warning "Error at Line '$($ex.InvocationInfo.ScriptLineNumber)': $($ex.InvocationInfo.Line). Error: $($ex.Exception.Message)"
     }
     $outputContext.AuditLogs.Add([PSCustomObject]@{
